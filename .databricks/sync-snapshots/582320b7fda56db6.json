@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "host": "https://adb-2824599842151189.9.azuredatabricks.net",
+  "remote_path": "/Workspace/Users/aaloliveira@toyota.com.br/ksepredictor",
+  "last_modified_times": {
+    ".gitattributes": "2026-04-28T15:53:17.3785634-03:00"
+  },
+  "local_to_remote_names": {
+    ".gitattributes": ".gitattributes"
+  },
+  "remote_to_local_names": {
+    ".gitattributes": ".gitattributes"
+  }
+}
