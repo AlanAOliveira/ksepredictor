@@ -12,7 +12,7 @@ app = Flask(__name__)
 def hello_world():
     chart_data = pd.DataFrame({'Apps': [x for x in range(30)],
                                'Fun with data': [2 ** x for x in range(30)]})
-    return f'<h1>KSE Predictor</h1>'
+    return f'<h1>KSE Predictor</h1><br><br><p>Data for fun with data:</p>'
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_RUN_HOST', '0.0.0.0')
