@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSE Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        body {
+            color: #DD0E23;
+            background-color: #58595b;
+        }
+
+        #nextOrderlane {
+            color: red;
+            font-weight: bolder;
+            font-size: 35px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>INDICAR KSE</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="inputBack" class="form-label">Back | Partnumber</label>
+                    <input type="text" class="form-control" value="0002" id="inputBack"
+                        placeholder="Back ou Partnumber">
+                </div>
+                <div class="mb-3">
+                    <label for="inputOrderLane" class="form-label">Back | Partnumber</label>
+                    <input type="text" class="form-control" value="2025030303" id="inputOrderLane"
+                        placeholder="Ex:2026042803">
+                </div>
+                <div class="mb-3">
+                    <label for="inputQtd" class="form-label">Quantidade de Caixas</label>
+                    <input type="text" class="form-control" value="1" id="inputQtd" placeholder="Quantidade de Caixas">
+                </div>
+                <button type="button" class="btn btn-primary" onClick="sendKSE()">
+                    Apontar KSE
+                </button>
+                <button type="button" class="btn btn-primary" onClick="iek()">
+                    Ver proximos Lanes
+                </button>
+                <p id="nextOrderlane">#######</p>
+                <p id="nextPartnumber">#######</p>
+                <p id="nextPartname">#######</p>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <script>
+        function sendKSE() {
+            document.getElementById('nextOrderlane').textContent = `Escrevendo dados de KSE na Planilha`
+            fetch('/api/send-kse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    partnumber: document.getElementById('inputBack')?.value,
+                    ordernumber: document.getElementById('inputOrderLane')?.value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                })
+                .catch(error => console.error('Error:', error))
+        }
+
+        function iek() {
+            document.getElementById('nextOrderlane').textContent = `Buscando no IEK...`
+            fetch('/api/iek', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    partnumber: document.getElementById('inputBack')?.value,
+                    ordernumber: document.getElementById('inputOrderLane')?.value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data) {
+                        console.log(data.data)
+                        document.getElementById('nextOrderlane').textContent = `Next Order Lane: ${data.data[0]}`
+                        document.getElementById('nextPartnumber').textContent = `Partnumber: ${data.data[1]}`
+                        document.getElementById('nextPartname').textContent = `Partname: ${data.data[2]}`
+                    } else {
+                        document.getElementById('nextOrderlane').textContent = 'Não foi possivel encontrar proximo IEK para esse Back/Partnumber e Ordernumber'
+                    }
+                })
+                .catch(error => console.error('Error:', error))
+        }
+    </script>
+</body>
+
+</html>
